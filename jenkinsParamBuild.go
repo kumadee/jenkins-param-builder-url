@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/url"
+	"os"
 	"strconv"
 
 	"golang.org/x/net/html"
@@ -40,7 +42,30 @@ func GenerateJenkinsParamBuildUrl(path string, m *SimpleMap) string {
 		q.Set(k, v)
 	}
 	u.RawQuery = q.Encode()
-	return html.EscapeString(u.String())
+	return u.String()
+}
+
+func createHtmlContent(url string, value string) {
+	const tpl = `
+<li>
+    <a href='{{.Url}}'>{{.Value}}</a>
+</li>`
+	check := func(err error) {
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	t, err := template.New("jenkins").Parse(tpl)
+	check(err)
+	data := struct {
+		Url   string
+		Value string
+	}{
+		Url:   url,
+		Value: value,
+	}
+	err = t.Execute(os.Stdout, data)
+	check(err)
 }
 
 func main() {
@@ -80,5 +105,5 @@ func main() {
 		"VISUALCMS_MODULE_VERSION":                      "^v3.4.0",
 		"WAVE_THEME_VERSION":                            "v1.6.1",
 	}
-	fmt.Println(GenerateJenkinsParamBuildUrl("", &values))
+	createHtmlContent(GenerateJenkinsParamBuildUrl("", &values), "6.4.x")
 }
