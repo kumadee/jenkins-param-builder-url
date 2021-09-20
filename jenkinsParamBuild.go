@@ -104,6 +104,7 @@ func main() {
 		"USERCENTRICS_MODULE_VERSION":                   "^v1.1.3",
 		"VISUALCMS_MODULE_VERSION":                      "^v3.4.0",
 		"WAVE_THEME_VERSION":                            "v1.6.1",
+		"WYSIWYG_EDITOR_MODULE_VERSION":                 "^v2.4.0",
 	}
 	createHtmlContent(GenerateJenkinsParamBuildUrl("", &values), "6.4.x")
 }
